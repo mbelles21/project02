@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText password;
     private TextView header;
     private Button button;
+    private Button cancelButton;
 
     private String usernameString;
     private String passwordString;
@@ -46,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.editTextTextPassword);
 
         button = findViewById(R.id.button);
+        cancelButton = findViewById(R.id.buttonCancel);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,11 +61,14 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }
-                /*
-                Intent intent = LandingActivity.intentFactory(getApplicationContext(), user.getUserID());
-                startActivity(intent);
+            }
+        });
 
-                 */
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = MainActivity.intentFactory(getApplicationContext());
+                startActivity(intent);
             }
         });
     }

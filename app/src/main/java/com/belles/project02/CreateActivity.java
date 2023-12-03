@@ -41,9 +41,7 @@ public class CreateActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getValuesFromDisplay();
-                User newUser = new User(usernameString, passwordString, false);
-                mStoreLogDAO.insert(newUser);
+                createNewAccount();
 
                 Intent intent = LoginActivity.intentFactory(getApplicationContext());
                 startActivity(intent);
@@ -54,9 +52,7 @@ public class CreateActivity extends AppCompatActivity {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                getValuesFromDisplay();
-                User newAdmin = new User(usernameString, passwordString, true);
-                mStoreLogDAO.insert(newAdmin);
+                createNewAccount();
 
                 Intent intent = LoginActivity.intentFactory(getApplicationContext());
                 startActivity(intent);
@@ -66,9 +62,12 @@ public class CreateActivity extends AppCompatActivity {
         });
     }
 
-    private void getValuesFromDisplay() {
+    private void createNewAccount() {
         usernameString = username.getText().toString();
         passwordString = password.getText().toString();
+
+        User newAdmin = new User(usernameString, passwordString, false);
+        mStoreLogDAO.insert(newAdmin);
     }
 
     public static Intent intentFactory(Context packageContext) {
