@@ -8,8 +8,9 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.belles.project02.StoreLog;
+import com.belles.project02.User;
 
-@Database(entities = {StoreLog.class}, version = 1)
+@Database(entities = {StoreLog.class, User.class}, version = 1)
 @TypeConverters({DateTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public static final String DATABASE_NAME = "StoreLog.db";
