@@ -22,6 +22,7 @@ import com.belles.project02.DB.StoreLogDAO;
 import com.belles.project02.databinding.ActivityLandingBinding;
 
 import java.util.List;
+import java.util.Random;
 
 public class LandingActivity extends AppCompatActivity {
     private static final String USER_ID_KEY = "com.belles.project02.userIDKey";
@@ -34,6 +35,7 @@ public class LandingActivity extends AppCompatActivity {
     private Button ordersButton;
     private Button cancelButton;
     private Button logoutButton;
+    private Button walletButton;
 
     private StoreLogDAO mStoreLogDAO;
 
@@ -65,6 +67,7 @@ public class LandingActivity extends AppCompatActivity {
         cancelButton = binding.cancelOrderButton;
         mAdmin = binding.textViewAdmin;
         logoutButton = binding.button;
+        walletButton = binding.buttonWallet;
 
         display.setMovementMethod(new ScrollingMovementMethod());
 
@@ -105,6 +108,13 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 logoutUser();
+            }
+        });
+
+        walletButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewFunds();
             }
         });
 
@@ -219,26 +229,34 @@ public class LandingActivity extends AppCompatActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
-        /*
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.user_menu, menu);
-        return true;
-
-         */
     }
 
-    /*
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.userMenuOptions:
-                logoutUser();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+    public void viewFunds() {
+        Random random = new Random();
+        double min = 0.0;
+        double max = 9999999.9;
+        double funds = min + (max - min) * random.nextDouble();
+        funds = Math.round(funds * 100.0) / 100.0;
 
-     */
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setMessage("You have $" + funds);
+
+        alertBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        alertBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //don't need to put anything here
+                    }
+                });
+        alertBuilder.create().show();
+    }
 
     public static Intent intentFactory(Context context, int userID) {
         Intent intent = new Intent(context, LandingActivity.class);

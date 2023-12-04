@@ -43,14 +43,13 @@ public class CreateActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                usernameString = username.getText().toString();
-                passwordString = password.getText().toString();
-
-                User newUser = new User(usernameString, passwordString, false);
-                mStoreLogDAO.insert(newUser);
-
-                Intent intent = LoginActivity.intentFactory(getApplicationContext());
-                startActivity(intent);
+                getValuesFromDisplay();
+                if(!checkForUserInDatabase()) {
+                    Intent intent = LoginActivity.intentFactory(getApplicationContext());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(CreateActivity.this, "Invalid account", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -58,14 +57,21 @@ public class CreateActivity extends AppCompatActivity {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                usernameString = username.getText().toString();
-                passwordString = password.getText().toString();
-
+                getValuesFromDisplay();
+                if(!checkForAdminInDatabase()) {
+                    Intent intent = LoginActivity.intentFactory(getApplicationContext());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(CreateActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                }
+                /*
                 User newAdmin = new User(usernameString, passwordString, true);
                 mStoreLogDAO.insert(newAdmin);
 
                 Intent intent = LoginActivity.intentFactory(getApplicationContext());
                 startActivity(intent);
+
+                 */
 
                 return false;
             }
@@ -78,6 +84,37 @@ public class CreateActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void getValuesFromDisplay() {
+        usernameString = username.getText().toString();
+        passwordString = password.getText().toString();
+    }
+
+    private boolean checkForUserInDatabase() {
+        user = mStoreLogDAO.getUserByUsername(usernameString);
+        if(user != null) {
+            Toast.makeText(this, "user " + usernameString + " already exists", Toast.LENGTH_SHORT).show();
+            List<User> users = mStoreLogDAO.getAllUsers();
+            return true;
+        } else {
+            User newUser = new User(usernameString, passwordString, false);
+            mStoreLogDAO.insert(newUser);
+            return false;
+        }
+    }
+
+    private boolean checkForAdminInDatabase() {
+        user = mStoreLogDAO.getUserByUsername(usernameString);
+        if(user != null) {
+            Toast.makeText(this, "user " + usernameString + " already exists", Toast.LENGTH_SHORT).show();
+            List<User> users = mStoreLogDAO.getAllUsers();
+            return true;
+        } else {
+            User newUser = new User(usernameString, passwordString, true);
+            mStoreLogDAO.insert(newUser);
+            return false;
+        }
     }
 
     public static Intent intentFactory(Context packageContext) {
