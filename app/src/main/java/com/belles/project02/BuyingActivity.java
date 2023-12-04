@@ -57,6 +57,9 @@ public class BuyingActivity extends AppCompatActivity {
 
         backButton = binding.button5;
 
+        mStoreLogDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries().build().StoreLogDAO();
+
         buttonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +139,7 @@ public class BuyingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
+    } // end of onCreate
 
     public static Intent intentFactory(Context packageContext) {
         Intent intent = new Intent(packageContext, BuyingActivity.class);

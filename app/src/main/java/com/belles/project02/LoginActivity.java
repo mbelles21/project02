@@ -68,6 +68,14 @@ public class LoginActivity extends AppCompatActivity {
                  */
             }
         });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = MainActivity.intentFactory(getApplicationContext());
+                startActivity(intent);
+            }
+        });
     }
 
     private void getValuesFromDisplay() {

@@ -64,6 +64,7 @@ public class LandingActivity extends AppCompatActivity {
         ordersButton = binding.ordersButton;
         cancelButton = binding.cancelOrderButton;
         mAdmin = binding.textViewAdmin;
+        logoutButton = binding.button;
 
         display.setMovementMethod(new ScrollingMovementMethod());
 
@@ -97,6 +98,13 @@ public class LandingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = CancelActivity.intentFactory(getApplicationContext());
                 startActivity(intent);
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutUser();
             }
         });
 
