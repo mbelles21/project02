@@ -24,8 +24,8 @@ import com.belles.project02.databinding.ActivityLandingBinding;
 import java.util.List;
 
 public class LandingActivity extends AppCompatActivity {
-    private static final String USER_ID_KEY = "com.example.project02.userIDKey";
-    private static final String PREFERENCES_KEY = "com.example.project02.preferencesKey";
+    private static final String USER_ID_KEY = "com.belles.project02.userIDKey";
+    private static final String PREFERENCES_KEY = "com.belles.project02.preferencesKey";
 
     private ActivityLandingBinding binding;
 
@@ -33,6 +33,7 @@ public class LandingActivity extends AppCompatActivity {
     private Button buyButton;
     private Button ordersButton;
     private Button cancelButton;
+    private Button logoutButton;
 
     private StoreLogDAO mStoreLogDAO;
 

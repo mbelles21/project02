@@ -22,9 +22,15 @@ import java.util.List;
 
 public class BuyingActivity extends AppCompatActivity {
     private ActivityBuyingBinding binding;
-
-    private TextView mMainDisplay;
-    private Button mButton;
+    private Button buttonButton;
+    private Button wireButton;
+    private Button buttonButton2;
+    private Button threadButton;
+    private Button pizzaButton;
+    private Button materiaButton;
+    private Button bottleButton;
+    private Button mysteryButton;
+    private Button backButton;
 
     private StoreLogDAO mStoreLogDAO;
     private int userID;
@@ -40,40 +46,96 @@ public class BuyingActivity extends AppCompatActivity {
         binding = ActivityBuyingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        mButton = binding.button1;
+        buttonButton = binding.button1;
+        wireButton = binding.button2;
+        buttonButton2 = binding.button3;
+        threadButton = binding.button4;
+        pizzaButton = binding.button6;
+        materiaButton = binding.button7;
+        bottleButton = binding.button8;
+        mysteryButton = binding.button9;
 
-        mMainDisplay = binding.mainDisplay;
-        mMainDisplay.setMovementMethod(new ScrollingMovementMethod()); // so it can scroll
+        backButton = binding.button5;
 
-        mStoreLogDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries().build().StoreLogDAO();
-
-        refreshDisplay();
-
-        mButton.setOnClickListener(new View.OnClickListener() {
+        buttonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //userID = user.getUserID();
-                StoreLog log = new StoreLog("button", "a button", 2.00, userID);
+                StoreLog log = new StoreLog("Button", "a button", 2.00, userID);
                 mStoreLogDAO.insert(log);
-
                 Toast.makeText(BuyingActivity.this, "Purchased", Toast.LENGTH_SHORT).show();
-                refreshDisplay();
             }
         });
-    }
 
-    private void refreshDisplay() {
-        mStoreLogList = mStoreLogDAO.getStoreLogs();
-        if(!mStoreLogList.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for(StoreLog log : mStoreLogList) {
-                sb.append(log.toString());
+        wireButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StoreLog log = new StoreLog("Wire", "for the buttons", 1.0, userID);
+                mStoreLogDAO.insert(log);
+                Toast.makeText(BuyingActivity.this, "Purchased", Toast.LENGTH_SHORT).show();
             }
-            mMainDisplay.setText(sb.toString());
-        } else {
-            mMainDisplay.setText("No logs yet.");
-        }
+        });
+
+        buttonButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StoreLog log = new StoreLog("The other button", "for clothes", 0.5, userID);
+                mStoreLogDAO.insert(log);
+                Toast.makeText(BuyingActivity.this, "Purchased", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        threadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StoreLog log = new StoreLog("Thread", "for the clothes buttons", 1.25, userID);
+                mStoreLogDAO.insert(log);
+                Toast.makeText(BuyingActivity.this, "Purchased", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        pizzaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StoreLog log = new StoreLog("Extra large 3 topping pizza", "with cheese", 9.99, userID);
+                mStoreLogDAO.insert(log);
+                Toast.makeText(BuyingActivity.this, "Pizza time!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        materiaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StoreLog log = new StoreLog("Enemy Skill Materia", "lets you learn cool spells", 99.99, userID);
+                mStoreLogDAO.insert(log);
+                Toast.makeText(BuyingActivity.this, "Purchased", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        bottleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StoreLog log = new StoreLog("Water Bottle", "water not included", 14.75, userID);
+                mStoreLogDAO.insert(log);
+                Toast.makeText(BuyingActivity.this, "Purchased", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mysteryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StoreLog log = new StoreLog("Mystery Item", "not even we know what it is", 3.49, userID);
+                mStoreLogDAO.insert(log);
+                Toast.makeText(BuyingActivity.this, "Purchased", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = LandingActivity.intentFactory(getApplicationContext(), userID);
+                startActivity(intent);
+            }
+        });
     }
 
     public static Intent intentFactory(Context packageContext) {

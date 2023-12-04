@@ -5,6 +5,7 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -21,6 +22,9 @@ import java.util.List;
 import java.util.Random;
 
 public class CancelActivity extends AppCompatActivity {
+    private static final String USER_ID_KEY = "com.belles.project02.userIDKey";
+    private static final String PREFERENCES_KEY = "com.belles.project02.preferencesKey";
+
     private ActivityCancelBinding mBinding;
 
     private TextView mMainDisplay;
@@ -28,8 +32,13 @@ public class CancelActivity extends AppCompatActivity {
     private EditText mOrderNumText;
     private Button mButton;
     private Button mSnapButton;
+    private Button backButton;
 
     private int orderNum;
+    private int mUserID;
+    private User mUser;
+
+    private SharedPreferences mPreferences = null;
 
     private StoreLogDAO mStoreLogDAO;
     List<StoreLog> mStoreLogList;
@@ -38,6 +47,11 @@ public class CancelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cancel);
+
+        getDatabase();
+        checkForUser();
+        addUserToPreference(mUserID);
+        loginUser(mUserID);
 
         mBinding = ActivityCancelBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
@@ -48,9 +62,18 @@ public class CancelActivity extends AppCompatActivity {
         mButton = mBinding.button3;
         mSnapButton = mBinding.buttonSnap;
 
+        backButton = mBinding.button10;
+
         mMainDisplay.setMovementMethod(new ScrollingMovementMethod());
         mStoreLogDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries().build().StoreLogDAO();
+
+        //admin functionality
+        if(mUser != null && mUser.isAdmin()) {
+            mSnapButton.setVisibility(View.VISIBLE);
+        } else {
+            mSnapButton.setVisibility(View.GONE);
+        }
 
         refreshDisplay();
 
@@ -70,6 +93,71 @@ public class CancelActivity extends AppCompatActivity {
                 refreshDisplay();
             }
         });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = LandingActivity.intentFactory(getApplicationContext(), mUserID);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void getDatabase() {
+        mStoreLogDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .build().StoreLogDAO();
+    }
+
+    private void checkForUser() {
+        //do we have a user in the intent?
+        mUserID = getIntent().getIntExtra(USER_ID_KEY, -1);
+
+        if(mUserID != -1) {
+            return;
+        }
+
+        //do we have a user in the preferences?
+        if(mPreferences == null) {
+            getPrefs();
+        }
+        mUserID = mPreferences.getInt(USER_ID_KEY, -1);
+
+        if(mUserID != -1) {
+            return;
+        }
+
+        //do we have a user at all?
+        List<User> users = mStoreLogDAO.getAllUsers();
+        if(users.size() <= 0) {
+            User defaultUser = new User("daclink", "dac123", false);
+            User altUser = new User("drew", "dac123", true);
+            mStoreLogDAO.insert(defaultUser, altUser);
+        }
+
+        Intent intent = LoginActivity.intentFactory(this);
+        startActivity(intent);
+    }
+
+    private void addUserToPreference(int userID) {
+        if(mPreferences == null) {
+            getPrefs();
+        }
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putInt(USER_ID_KEY, userID);
+        editor.apply();  //must call this for editors
+    }
+
+    private void getPrefs() {
+        mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+    }
+
+    private void loginUser(int userID) {
+        //check if userID is valid
+        mUser = mStoreLogDAO.getUserByUserID(userID);
+        //check if mUser is not null
+        addUserToPreference(userID);
+        invalidateOptionsMenu();
     }
 
     private void refreshDisplay() {
@@ -100,6 +188,7 @@ public class CancelActivity extends AppCompatActivity {
     }
 
     private void snap() {
+        mStoreLogList = mStoreLogDAO.getStoreLogs();
         int min = 1;
         int max = mStoreLogList.size();
         Random rand = new Random();

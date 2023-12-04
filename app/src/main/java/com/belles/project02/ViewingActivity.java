@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.belles.project02.DB.AppDatabase;
@@ -19,6 +21,9 @@ import java.util.List;
 public class ViewingActivity extends AppCompatActivity {
     private ActivityViewingBinding binding;
     private TextView mMainDisplay;
+    private Button mButton;
+
+    private int mUserID;
     private StoreLogDAO mStoreLogDAO;
     List<StoreLog> mStoreLogList;
 
@@ -32,11 +37,20 @@ public class ViewingActivity extends AppCompatActivity {
 
         mMainDisplay = binding.mainDisplay;
         mMainDisplay.setMovementMethod(new ScrollingMovementMethod()); // so it can scroll
+        mButton = binding.button4;
 
         mStoreLogDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries().build().StoreLogDAO();
 
         refreshDisplay();
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = LandingActivity.intentFactory(getApplicationContext(), mUserID);
+                startActivity(intent);
+            }
+        });
     }
 
     private void refreshDisplay() {

@@ -20,6 +20,7 @@ public class CreateActivity extends AppCompatActivity {
     private EditText username;
     private EditText password;
     private Button button;
+    private Button cancelButton;
 
     private String usernameString;
     private String passwordString;
@@ -37,11 +38,16 @@ public class CreateActivity extends AppCompatActivity {
         username = findViewById(R.id.editTextTextUsername);
         password = findViewById(R.id.editTextTextPassword);
         button = binding.button;
+        cancelButton = binding.buttonCancel;
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewAccount();
+                usernameString = username.getText().toString();
+                passwordString = password.getText().toString();
+
+                User newUser = new User(usernameString, passwordString, false);
+                mStoreLogDAO.insert(newUser);
 
                 Intent intent = LoginActivity.intentFactory(getApplicationContext());
                 startActivity(intent);
@@ -52,7 +58,11 @@ public class CreateActivity extends AppCompatActivity {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                createNewAccount();
+                usernameString = username.getText().toString();
+                passwordString = password.getText().toString();
+
+                User newAdmin = new User(usernameString, passwordString, true);
+                mStoreLogDAO.insert(newAdmin);
 
                 Intent intent = LoginActivity.intentFactory(getApplicationContext());
                 startActivity(intent);
@@ -60,14 +70,14 @@ public class CreateActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }
 
-    private void createNewAccount() {
-        usernameString = username.getText().toString();
-        passwordString = password.getText().toString();
-
-        User newAdmin = new User(usernameString, passwordString, false);
-        mStoreLogDAO.insert(newAdmin);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = MainActivity.intentFactory(getApplicationContext());
+                startActivity(intent);
+            }
+        });
     }
 
     public static Intent intentFactory(Context packageContext) {

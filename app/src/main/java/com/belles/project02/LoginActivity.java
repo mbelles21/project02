@@ -61,14 +61,11 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = MainActivity.intentFactory(getApplicationContext());
+                /*
+                Intent intent = LandingActivity.intentFactory(getApplicationContext(), user.getUserID());
                 startActivity(intent);
+
+                 */
             }
         });
     }
