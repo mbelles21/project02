@@ -69,7 +69,7 @@ public class CancelActivity extends AppCompatActivity {
                 .allowMainThreadQueries().build().StoreLogDAO();
 
         //admin functionality
-        if(mUser != null && mUser.isAdmin()) {
+        if(mUser.isAdmin()) {
             mSnapButton.setVisibility(View.VISIBLE);
         } else {
             mSnapButton.setVisibility(View.GONE);
@@ -189,12 +189,11 @@ public class CancelActivity extends AppCompatActivity {
 
     private void snap() {
         mStoreLogList = mStoreLogDAO.getStoreLogs();
-        int min = 1;
-        int max = mStoreLogList.size();
-        Random rand = new Random();
-        for(int i = 0; i < mStoreLogList.size()/2; i++) {
-            orderNum = rand.nextInt(max - min) + min;
-            checkForOrderInDatabase();
+        for(StoreLog log : mStoreLogList) {
+            orderNum = log.getLogID();
+            if(orderNum % 2 == 0) {
+                mStoreLogDAO.delete(log);
+            }
         }
     }
 
